@@ -111,7 +111,7 @@ def send_mes(call):
     mes=""
     for i in range(len(g)):
         if None is f.cell(row=g[i][1][0],column=g[i][1][1]+1).value:
-            break
+            None
             #mes = mes + f"\n{g[i][0]}          {f.cell(row=g[i][1][0],column=2).value}\n        ———\n"
 
 
@@ -124,7 +124,7 @@ def send_mes(call):
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
     
 
-    bot.send_message(call.from_user.id, f"Расписание на  {call.data[4:6:]}.{call.data[6:8:]}\n" + mes)#Отправляем
+    bot.send_message(call.from_user.id, f"Расписание на  {call.data[6:8:]}.{call.data[4:6:]}\n" + mes)#Отправляем
     
 
 
