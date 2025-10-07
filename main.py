@@ -6,14 +6,32 @@ import json
 import os
 import urllib.request
 
-token='8269738099:AAETqsa8WwNzhBfVH2zLay7_svsH_DLQDTc'
+token='8478375967:AAEA90do_76J-rG0tgRwKSuvD2uXXUk1JsY'
 #8347380655:AAE56FocrVCTzAY39vc4QOo9Oz0IsZttcBw ориг
 #8269738099:AAETqsa8WwNzhBfVH2zLay7_svsH_DLQDTc тест
+#8478375967:AAEA90do_76J-rG0tgRwKSuvD2uXXUk1JsY атпешки 23-1
+
+
+
+
 bot=telebot.TeleBot(token)
 
 
 
 #####################
+
+
+#                                                                         ВАЖНО!!!
+# 1 - группа Эг-24-1
+# 2 - группа АТП-23-1
+
+gr="2"#Какая именно группа 
+
+
+
+#    "1":[0]
+#    "группа" : [номер таблицы, колонка по горизонтали с группой]
+group={"1":[1,5],"2":[2,9]}
 
 
 
@@ -40,8 +58,6 @@ def aaa(message):
         #Добавляем кнопки
         
 
-
-
         b1= telebot.types.InlineKeyboardButton(text=f"<--",callback_data=f">")
         b2= telebot.types.InlineKeyboardButton(text=f"Сегодня",callback_data=f"{datetime_full(0)}")
         b3= telebot.types.InlineKeyboardButton(text=f"-->",callback_data=f"<")
@@ -67,21 +83,13 @@ def callback_query(call):
 
     elif call.data == f">":
 
-        b6= telebot.types.InlineKeyboardButton(text=f"{need_day(1)}",callback_data=f"{datetime_full(1)}")
-
-
-
-
-
-
-
         bot.send_message(call.from_user.id, "Пока не работает, терпи.")
 
     else:
         send_mes(call)
 
 
-#elif call.data == f"{need_day(-3)}":
+
     
 
 def send_mes(call):
@@ -89,7 +97,7 @@ def send_mes(call):
     pdf=f'{call.data}.pdf'
     try:
         urllib.request.urlretrieve(url, pdf)
-    except urllib.error.HTTPError as err:
+    except urllib.error.HTTPError:
 
         bot.send_message(call.from_user.id, f"Расписания нет. Отдыхай, разрешаю👍")
         return None
@@ -99,9 +107,10 @@ def send_mes(call):
 
     desting = f'{call.data}.xlsx'
 
-    a = camelot.read_pdf(pdf)
+    a = camelot.read_pdf(pdf, pages='all')
     os.remove(pdf)
-    a[1].df.to_excel(desting)
+
+    a[group[gr][0]].df.to_excel(desting)
     
     #открываем фаил exel
     fff=openpyxl.load_workbook(desting) 
@@ -111,21 +120,22 @@ def send_mes(call):
     #Ищем сколько всего пар
     g=[]
     for i in range(f.max_row-2):
-        if f.cell(row=f.max_row-i,column=5).value is None:
+        if f.cell(row=f.max_row-i,column=group[gr][1]).value is None:
             exit
         else:
-            g.append([int(f.cell(row=f.max_row-i,column=5).value),[f.max_row-i,5]])
+            g.append([int(f.cell(row=f.max_row-i,column=group[gr][1]).value),[f.max_row-i,group[gr][1]]])
     g = g[::-1]    
     #Состовляем сообщение
     mes=""
     for i in range(len(g)):
+        #если нет пары
         if None is f.cell(row=g[i][1][0],column=g[i][1][1]+1).value:
             None
             #mes = mes + f"\n{g[i][0]}          {f.cell(row=g[i][1][0],column=2).value}\n        ———\n"
 
 
 
-
+        #если препода 2
         elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3:
 
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[0]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
@@ -133,10 +143,10 @@ def send_mes(call):
 
 
 
-
+        #если ничего необычного
         else:#              1                                 08:30 - 09:55                                             Тех.мех.                                                        134                                                                                                                                                                 Лекции                                                                                                                                                                                      
 
-            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
+            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines())-1]}\n"
     
 
     bot.send_message(call.from_user.id, f"Расписание на  {call.data[6:8:]}.{call.data[4:6:]}\n" + mes)#Отправляем
