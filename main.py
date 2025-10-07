@@ -2,7 +2,7 @@ import camelot
 import openpyxl 
 import telebot
 from datetime import datetime, timedelta 
-from telebot import types
+import json
 import os
 import urllib.request
 
@@ -12,7 +12,6 @@ token='8269738099:AAETqsa8WwNzhBfVH2zLay7_svsH_DLQDTc'
 bot=telebot.TeleBot(token)
 
 
-#####
 
 #####################
 
@@ -24,6 +23,8 @@ bot=telebot.TeleBot(token)
 
 @bot.message_handler(content_types=['text'])
 def aaa(message):
+    
+
     if(message.text == "/start"):
         keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         button_support = telebot.types.KeyboardButton(text="Расписание")
@@ -65,7 +66,15 @@ def callback_query(call):
         bot.send_message(call.from_user.id, "Пока не работает, терпи.")
 
     elif call.data == f">":
-    
+
+        b6= telebot.types.InlineKeyboardButton(text=f"{need_day(1)}",callback_data=f"{datetime_full(1)}")
+
+
+
+
+
+
+
         bot.send_message(call.from_user.id, "Пока не работает, терпи.")
 
     else:
@@ -115,13 +124,19 @@ def send_mes(call):
             #mes = mes + f"\n{g[i][0]}          {f.cell(row=g[i][1][0],column=2).value}\n        ———\n"
 
 
+
+
         elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3:
 
-            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
+            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[0]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
+
+
+
+
 
         else:#              1                                 08:30 - 09:55                                             Тех.мех.                                                        134                                                                                                                                                                 Лекции                                                                                                                                                                                      
 
-            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
+            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
     
 
     bot.send_message(call.from_user.id, f"Расписание на  {call.data[6:8:]}.{call.data[4:6:]}\n" + mes)#Отправляем
