@@ -6,7 +6,7 @@ import json
 import os
 import urllib.request
 
-token='8478375967:AAEA90do_76J-rG0tgRwKSuvD2uXXUk1JsY'
+token='8269738099:AAETqsa8WwNzhBfVH2zLay7_svsH_DLQDTc'
 #8347380655:AAE56FocrVCTzAY39vc4QOo9Oz0IsZttcBw ориг
 #8269738099:AAETqsa8WwNzhBfVH2zLay7_svsH_DLQDTc тест
 #8478375967:AAEA90do_76J-rG0tgRwKSuvD2uXXUk1JsY атпешки 23-1
@@ -25,7 +25,7 @@ bot=telebot.TeleBot(token)
 # 1 - группа Эг-24-1
 # 2 - группа АТП-23-1
 
-gr="2"#Какая именно группа 
+gr="1"#Какая именно группа 
 
 
 
@@ -114,7 +114,7 @@ def send_mes(call):
     
     #открываем фаил exel
     fff=openpyxl.load_workbook(desting) 
-    os.remove(f'{call.data}.xlsx') 
+    os.remove(desting) 
     f=fff.active
 
     #Ищем сколько всего пар
@@ -127,6 +127,7 @@ def send_mes(call):
     g = g[::-1]    
     #Состовляем сообщение
     mes=""
+
     for i in range(len(g)):
         #если нет пары
         if None is f.cell(row=g[i][1][0],column=g[i][1][1]+1).value:
@@ -136,9 +137,16 @@ def send_mes(call):
 
 
         #если препода 2
-        elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3:
+        elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3 and g[i][1][0]+2 != g[i+1][1][0] and f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value != None:
 
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[0]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
+                
+                
+                #если препода 2 но группы на разных парах
+
+        elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3:
+
+            mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
 
 
 
