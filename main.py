@@ -56,11 +56,11 @@ def aaa(message):
 
 
         #Добавляем кнопки
-        
 
-        b1= telebot.types.InlineKeyboardButton(text=f"<--",callback_data=f">")
+
+        b1= telebot.types.InlineKeyboardButton(text=f"<--",callback_data=f"<{datetime_full(-3)}")
         b2= telebot.types.InlineKeyboardButton(text=f"Сегодня",callback_data=f"{datetime_full(0)}")
-        b3= telebot.types.InlineKeyboardButton(text=f"-->",callback_data=f"<")
+        b3= telebot.types.InlineKeyboardButton(text=f"-->",callback_data=f">{datetime_full(3)}")
 
         b6= telebot.types.InlineKeyboardButton(text=f"{need_day(1)}",callback_data=f"{datetime_full(1)}")
         b7= telebot.types.InlineKeyboardButton(text=f"{need_day(2)}",callback_data=f"{datetime_full(2)}")
@@ -74,16 +74,53 @@ def aaa(message):
 
         bot.send_message(message.chat.id, "Привет", reply_markup=kb1) #Выводим клавиатуру
 
+    
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    if call.data == f"<":
+    if call.data[:1:] == f"<":
+        
+        time = datetime.strptime(call.data[1::],"%Y%m%d")
 
-        bot.send_message(call.from_user.id, "Пока не работает, терпи.")
+        kb1 = telebot.types.InlineKeyboardMarkup()#Клавиатуа
 
-    elif call.data == f">":
 
-        bot.send_message(call.from_user.id, "Пока не работает, терпи.")
+        b1= telebot.types.InlineKeyboardButton(text=f"<--",callback_data=f"<{plus_time_eng(time,-6)}")
+        b2= telebot.types.InlineKeyboardButton(text=f"Сегодня",callback_data=f"{datetime_full(0)}")
+        b3= telebot.types.InlineKeyboardButton(text=f"-->",callback_data=f">{plus_time_eng(time,-1)}")
+
+        b6= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-1)}",callback_data=f"{plus_time_eng(time,-1)}")
+        b7= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-2)}",callback_data=f"{plus_time_eng(time,-2)}")
+        b8= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-3)}",callback_data=f"{plus_time_eng(time,-3)}")
+        b9= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-4)}",callback_data=f"{plus_time_eng(time,-4)}")
+        b10= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-5)}",callback_data=f"{plus_time_eng(time,-5)}")
+        b11= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,-6)}",callback_data=f"{plus_time_eng(time,-6)}")
+        
+        kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
+
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Пока не работает, терпи.{datetime.now()}", reply_markup=kb1)
+
+    elif call.data[:1:] == f">":
+        
+        time = datetime.strptime(call.data[1::],"%Y%m%d")
+
+        kb1 = telebot.types.InlineKeyboardMarkup()#Клавиатуа
+
+
+        b1= telebot.types.InlineKeyboardButton(text=f"<--",callback_data=f"<{plus_time_eng(time,1)}")
+        b2= telebot.types.InlineKeyboardButton(text=f"Сегодня",callback_data=f"{datetime_full(0)}")
+        b3= telebot.types.InlineKeyboardButton(text=f"-->",callback_data=f">{plus_time_eng(time,6)}")
+
+        b6= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,1)}",callback_data=f"{plus_time_eng(time,1)}")
+        b7= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,2)}",callback_data=f"{plus_time_eng(time,2)}")
+        b8= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,3)}",callback_data=f"{plus_time_eng(time,3)}")
+        b9= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,4)}",callback_data=f"{plus_time_eng(time,4)}")
+        b10= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,5)}",callback_data=f"{plus_time_eng(time,5)}")
+        b11= telebot.types.InlineKeyboardButton(text=f"{plus_time(time,6)}",callback_data=f"{plus_time_eng(time,6)}")
+        
+        kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
+
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Пока не работает, терпи.{datetime.now()}", reply_markup=kb1)
 
     else:
         send_mes(call)
@@ -174,6 +211,11 @@ def send_mes(call):
 
 ######### Доп функции там всякие
 
+def plus_time(time,n):
+    return (time + timedelta(days=n)).strftime("%d.%m")
+
+def plus_time_eng(time,n):
+    return (time + timedelta(days=n)).strftime("%Y%m%d")
 
 def need_day(n):
     now = datetime.now()  
