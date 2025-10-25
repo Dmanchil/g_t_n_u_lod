@@ -38,7 +38,6 @@ group={"1":[1,5],"2":[2,9]}
 
 
 
-
 @bot.message_handler(content_types=['text'])
 def aaa(message):
     
@@ -50,7 +49,7 @@ def aaa(message):
         bot.send_message(message.chat.id, "Привет", reply_markup=keyboard) 
 
     elif(message.text == "Расписание"):
-        
+        bot.send_message(1482529830,"55 {message.chat.id}")
 
         kb1 = telebot.types.InlineKeyboardMarkup()#Клавиатуа
 
@@ -71,7 +70,6 @@ def aaa(message):
         
         #Вставляем в клавиатуру
         kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
-
         bot.send_message(message.chat.id, "Привет", reply_markup=kb1) #Выводим клавиатуру
 
     
@@ -98,7 +96,7 @@ def callback_query(call):
         
         kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
 
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Пока не работает, терпи.{datetime.now()}", reply_markup=kb1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Расписание.\n{datetime.now()}", reply_markup=kb1)
 
     elif call.data[:1:] == f">":
         
@@ -120,7 +118,7 @@ def callback_query(call):
         
         kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
 
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Пока не работает, терпи.{datetime.now()}", reply_markup=kb1)
+        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Расписание.\n{datetime.now()}", reply_markup=kb1)
 
     else:
         send_mes(call)
@@ -161,28 +159,41 @@ def send_mes(call):
             exit
         else:
             g.append([int(f.cell(row=f.max_row-i,column=group[gr][1]).value),[f.max_row-i,group[gr][1]]])
-    g = g[::-1]    
+    
+    g = g[::-1] 
+    g.append([len(g)+1,[0,0]])
     #Состовляем сообщение
     mes=""
-
-    for i in range(len(g)):
+    print(g)
+    for i in range(len(g)-1):
         #если нет пары
+
         if None is f.cell(row=g[i][1][0],column=g[i][1][1]+1).value:
             None
             #mes = mes + f"\n{g[i][0]}          {f.cell(row=g[i][1][0],column=2).value}\n        ———\n"
 
 
 
-        #если препода 2
-        elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3 and g[i][1][0]+2 != g[i+1][1][0] and f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value != None:
 
+
+        #если препода 2
+
+        
+        elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3 and g[i][1][0]+2 != g[i+1][1][0] and f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value != None:
+            print(2)
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+2,column=g[i][1][1]+1).value.splitlines()[0]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
-                
+
+
+
+
+
+
+
                 
                 #если препода 2 но группы на разных парах
 
         elif len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()) == 3:
-
+            print(22)
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines())-1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[1]}\n"
 
 
@@ -190,7 +201,7 @@ def send_mes(call):
 
         #если ничего необычного
         else:#              1                                 08:30 - 09:55                                             Тех.мех.                                                        134                                                                                                                                                                 Лекции                                                                                                                                                                                      
-
+            print(1)
             mes = mes + f"\n{g[i][0]}       {f.cell(row=g[i][1][0],column=2).value}\n    {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[0]}  —  {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[1]}\n          {f.cell(row=g[i][1][0]+1,column=g[i][1][1]+1).value.splitlines()[0]}\n       {f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines()[len(f.cell(row=g[i][1][0],column=g[i][1][1]+1).value.splitlines())-1]}\n"
     
 
