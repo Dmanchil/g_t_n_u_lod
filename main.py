@@ -97,6 +97,9 @@ def callback_query(call):
         kb1.add(b6,b7,b8,b9,b10,b11,b1,b2,b3)
 
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=f"Расписание.\n{datetime.now()}", reply_markup=kb1)
+    elif call.data == f"20251129":
+        bot.send_message(call.message.chat.id, "Создатели расписания ебланы, терпим их тупизм")
+        return
 
     elif call.data[:1:] == f">":
         
