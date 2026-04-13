@@ -1,4 +1,4 @@
-camelot-py[cv]
+camelot-py
 openpyxl
 pyTelegramBotAPI
 requests
